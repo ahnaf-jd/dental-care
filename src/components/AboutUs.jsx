@@ -26,34 +26,8 @@ export default function AboutUs() {
             With over 10 years of experience, our team of expert dentists is committed 
             to providing you with the highest quality dental care in a comfortable and welcoming environment.
           </p>
-
-          <div className="about-features">
-            <div className="feature">
-              <span className="feature-icon">✓</span>
-              <div>
-                <h4>Expert Dentists</h4>
-                <p>Highly qualified professionals with years of experience</p>
-              </div>
-            </div>
-
-            <div className="feature">
-              <span className="feature-icon">✓</span>
-              <div>
-                <h4>Modern Technology</h4>
-                <p>Latest equipment for better results</p>
-              </div>
-            </div>
-
-            <div className="feature">
-              <span className="feature-icon">✓</span>
-              <div>
-                <h4>Patient Comfort</h4>
-                <p>Relaxing atmosphere and compassionate care</p>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
+        </div>
     </section>
   );
 }
