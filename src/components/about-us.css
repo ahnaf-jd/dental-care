@@ -39,7 +39,7 @@
 
 .image-card {
   position: absolute;
-  border-radius: 15px;
+  border-radius: 13px;
   overflow: hidden;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
   transition: transform 0.4s ease, box-shadow 0.4s ease;
@@ -89,7 +89,7 @@
   display: inline-block;
 
   color: #3d63e9;
-  font-size: 0.95rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: uppercase;

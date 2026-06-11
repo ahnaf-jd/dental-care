@@ -1,4 +1,5 @@
 import "./about-us.css";
+import clinicimg from "../assets/clinic.jpg";
 
 export default function AboutUs() {
   return (
@@ -8,7 +9,7 @@ export default function AboutUs() {
         <div className="about-left">
           <div className="about-images">
             <div className="image-card large">
-              <img src="https://images.unsplash.com/photo-1606611013016-969c19d4a42f?w=400&h=500&fit=crop" alt="Dental clinic" />
+              <img src={clinicimg} alt="Dental clinic" />
             </div>
           </div>
         </div>
@@ -20,8 +21,7 @@ export default function AboutUs() {
           <h2>Your Trusted Dental Care</h2>
           
           <p>
-            With over 10 years of experience, our team of expert dentists is committed 
-            to providing you with the highest quality dental care in a comfortable and welcoming environment.
+            lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae libero non enim placerat eleifend aliquam erat volutpat. Curabitur diam ex, dapibus purus sapien, cursus sed nisl tristique, commodo gravida lectus non.
           </p>
         </div>
         </div>
