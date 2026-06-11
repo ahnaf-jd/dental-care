@@ -10,9 +10,6 @@ export default function AboutUs() {
             <div className="image-card large">
               <img src="https://images.unsplash.com/photo-1606611013016-969c19d4a42f?w=400&h=500&fit=crop" alt="Dental clinic" />
             </div>
-            <div className="image-card small">
-              <img src="https://images.unsplash.com/photo-1583368632088-67e9dfeb4747?w=300&h=300&fit=crop" alt="Dentist with patient" />
-            </div>
           </div>
         </div>
 
@@ -26,34 +23,8 @@ export default function AboutUs() {
             With over 10 years of experience, our team of expert dentists is committed 
             to providing you with the highest quality dental care in a comfortable and welcoming environment.
           </p>
-
-          <div className="about-features">
-            <div className="feature">
-              <span className="feature-icon">✓</span>
-              <div>
-                <h4>Expert Dentists</h4>
-                <p>Highly qualified professionals with years of experience</p>
-              </div>
-            </div>
-
-            <div className="feature">
-              <span className="feature-icon">✓</span>
-              <div>
-                <h4>Modern Technology</h4>
-                <p>Latest equipment for better results</p>
-              </div>
-            </div>
-
-            <div className="feature">
-              <span className="feature-icon">✓</span>
-              <div>
-                <h4>Patient Comfort</h4>
-                <p>Relaxing atmosphere and compassionate care</p>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
+        </div>
     </section>
   );
 }
