@@ -10,9 +10,6 @@ export default function AboutUs() {
             <div className="image-card large">
               <img src="https://images.unsplash.com/photo-1606611013016-969c19d4a42f?w=400&h=500&fit=crop" alt="Dental clinic" />
             </div>
-            <div className="image-card small">
-              <img src="https://images.unsplash.com/photo-1583368632088-67e9dfeb4747?w=300&h=300&fit=crop" alt="Dentist with patient" />
-            </div>
           </div>
         </div>
 
