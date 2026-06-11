@@ -10,7 +10,7 @@ function Navbar() {
       {/* Logo */}
       <div className="logo">
         <FaTooth className="logo-icon" />
-        <h1>Nahian</h1>
+        <h1>Dental Care</h1>
       </div>
 
       {/* Desktop Navigation */}

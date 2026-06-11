@@ -21,7 +21,7 @@ function Footer() {
         <div className="footer-col">
           <div className="footer-logo">
             <FaTooth className="tooth-icon" />
-            <h2>Decare.</h2>
+            <h2>Dental Care</h2>
           </div>
 
           <p>

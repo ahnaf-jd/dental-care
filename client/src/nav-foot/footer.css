@@ -59,12 +59,12 @@
 .footer-col p{
   color:#d9e5ff;
   align-items:flex-start;
-  font-size:13px;
+  font-size:15px;
   line-height:1.6;
 }
 
 .footer-col h3{
-  font-size:1.3rem;
+  font-size:1.4rem;
   align-items:flex-start;
   margin-bottom:15px;
   font-weight:700;
@@ -85,7 +85,7 @@
 .footer-col ul li{
   margin-bottom:0;
   align-items:flex-start;
-  font-size:13px;
+  font-size:15px;
   color:#d9e5ff;
   cursor:pointer;
   transition:.3s;
