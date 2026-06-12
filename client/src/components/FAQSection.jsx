@@ -18,6 +18,15 @@ const css = `
     display: flex;
     width: 100%;
     min-height: 560px;
+    background: #ffffff;
+    overflow: hidden;
+  }
+
+  /* ── White gap after FAQ section ── */
+  .faq-gap {
+    width: 100%;
+    height: 80px;
+    background: #ffffff;
   }
 
   /* ── Left panel ── */
@@ -266,6 +275,9 @@ export default function FAQSection() {
         </div>
 
       </section>
+
+      {/* White gap after FAQ */}
+      <div className="faq-gap"></div>
     </>
   );
 }
