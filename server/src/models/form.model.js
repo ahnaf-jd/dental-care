@@ -19,7 +19,7 @@ const formSchema = new mongoose.Schema(
         type: String,
         required: true
     },
-    comments: {
+      message: {
       type: String,
       required: true,
     },

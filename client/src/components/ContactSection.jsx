@@ -28,6 +28,8 @@ export default function ContactSection() {
     setErrorMessage("");
 
     try {
+      console.log("Sending form data:", formData);
+      
       const response = await fetch(API_URL + "/submit", {
         method: "POST",
         headers: {
@@ -37,6 +39,8 @@ export default function ContactSection() {
       });
 
       const data = await response.json();
+      console.log("Response status:", response.status);
+      console.log("Response data:", data);
 
       if (response.ok && data.success) {
         setStatus("success");
@@ -44,7 +48,9 @@ export default function ContactSection() {
         setTimeout(() => setStatus("idle"), 3000);
       } else {
         setStatus("error");
-        setErrorMessage(data.message || "Failed to submit form");
+        const errorMsg = data.message || data.errors?.[0]?.msg || "Failed to submit form";
+        setErrorMessage(errorMsg);
+        console.error("Form error:", errorMsg);
       }
     } catch (err) {
       console.error("Submission error:", err);
@@ -284,6 +290,7 @@ export default function ContactSection() {
                 placeholder="Phone No."
                 value={formData.phone}
                 onChange={handleChange}
+                required
               />
               <input
                 type="text"
@@ -291,6 +298,7 @@ export default function ContactSection() {
                 placeholder="Subject"
                 value={formData.subject}
                 onChange={handleChange}
+                required
               />
             </div>
 

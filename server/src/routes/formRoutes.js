@@ -16,10 +16,12 @@ const formValidationRules = [
     .isEmail().withMessage('Please provide a valid email address'),
   body('phone')
     .trim()
-    .notEmpty().withMessage('Phone is required'),
+    .notEmpty().withMessage('Phone is required')
+    .isLength({ min: 5 }).withMessage('Phone must be at least 5 characters'),
   body('subject')
     .trim()
-    .notEmpty().withMessage('Subject is required'),
+    .notEmpty().withMessage('Subject is required')
+    .isLength({ min: 2, max: 200 }).withMessage('Subject must be between 2 and 200 characters'),
   body('message')
     .trim()
     .notEmpty().withMessage('Message is required')
