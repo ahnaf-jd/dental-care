@@ -28,8 +28,6 @@ export default function ContactSection() {
     setErrorMessage("");
 
     try {
-      console.log("Sending form data:", formData);
-      
       const response = await fetch(API_URL + "/submit", {
         method: "POST",
         headers: {
@@ -39,8 +37,6 @@ export default function ContactSection() {
       });
 
       const data = await response.json();
-      console.log("Response status:", response.status);
-      console.log("Response data:", data);
 
       if (response.ok && data.success) {
         setStatus("success");

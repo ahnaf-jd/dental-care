@@ -26,11 +26,16 @@ app.use("/api/blogs", blogRoutes);
 
 // Global error handler middleware
 app.use((err, req, res, next) => {
-  console.error('Error:', err.message);
+  // Only log detailed errors in development mode
+  if (process.env.NODE_ENV === 'development') {
+    console.error('Error:', err.message);
+  } else {
+    console.error('Internal Server Error');
+  }
   
   res.status(err.status || 500).json({
     success: false,
-    message: err.message || 'Internal Server Error',
+    message: process.env.NODE_ENV === 'development' ? err.message : 'Internal Server Error',
     ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
   });
 });

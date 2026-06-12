@@ -6,7 +6,12 @@ const connectDB = async () => {
 
     console.log("MongoDB Connected");
   } catch (error) {
-    console.error(error);
+    // Don't expose full error details in logs
+    if (process.env.NODE_ENV === 'development') {
+      console.error(error);
+    } else {
+      console.error('Database connection failed');
+    }
     process.exit(1);
   }
 };
