@@ -11,11 +11,20 @@ const formSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-
-    message: {
+      phone: {
+      type:String,
+      required: true
+    },
+      subject: {
+        type: String,
+        required: true
+    },
+    comments: {
       type: String,
       required: true,
     },
+  
+
   },
   {
     timestamps: true,

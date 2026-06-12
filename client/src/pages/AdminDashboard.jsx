@@ -54,10 +54,10 @@ function AdminDashboard() {
             <h3>Content</h3>
             <p>Manage website content</p>
           </div>
-          <div className="dashboard-card">
+          <div className="dashboard-card" onClick={() => navigate('/admin-messages')}>
             <div className="card-icon">💬</div>
             <h3>Messages</h3>
-            <p>Manage messages</p>
+            <p>Manage contact form messages</p>
           </div>
         </div>
       </div>

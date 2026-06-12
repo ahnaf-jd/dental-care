@@ -1,50 +1,55 @@
 import React, { useState } from "react";
 import { Map, Clock, Mail } from "lucide-react";
 
-/**
- * Paste the Web App URL you get after deploying the Apps Script
- * (see google-apps-script.js for the script + deployment steps).
- */
-const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL";
+const API_URL = "http://localhost:5000/api/forms";
 
 const initialForm = {
-  firstName: "",
+  name: "",
   email: "",
   phone: "",
   subject: "",
-  comments: "",
+  message: "",
 };
 
 export default function ContactSection() {
   const [formData, setFormData] = useState(initialForm);
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrorMessage("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("sending");
+    setErrorMessage("");
 
     try {
-      const body = new FormData();
-      Object.entries(formData).forEach(([key, value]) => body.append(key, value));
-
-      // Apps Script web apps don't return CORS headers, so we use
-      // "no-cors" and treat a resolved fetch as success.
-      await fetch(GOOGLE_SCRIPT_URL, {
+      const response = await fetch(API_URL + "/submit", {
         method: "POST",
-        body,
-        mode: "no-cors",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
 
-      setStatus("success");
-      setFormData(initialForm);
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setStatus("success");
+        setFormData(initialForm);
+        setTimeout(() => setStatus("idle"), 3000);
+      } else {
+        setStatus("error");
+        setErrorMessage(data.message || "Failed to submit form");
+      }
     } catch (err) {
       console.error("Submission error:", err);
       setStatus("error");
+      setErrorMessage("Network error. Please try again.");
     }
   };
 
@@ -256,9 +261,9 @@ export default function ContactSection() {
             <div className="contact-form__row">
               <input
                 type="text"
-                name="firstName"
-                placeholder="First Name"
-                value={formData.firstName}
+                name="name"
+                placeholder="Full Name"
+                value={formData.name}
                 onChange={handleChange}
                 required
               />
@@ -290,10 +295,11 @@ export default function ContactSection() {
             </div>
 
             <textarea
-              name="comments"
-              placeholder="Write comments"
-              value={formData.comments}
+              name="message"
+              placeholder="Write your message"
+              value={formData.message}
               onChange={handleChange}
+              required
             />
 
             <button
@@ -311,7 +317,7 @@ export default function ContactSection() {
             )}
             {status === "error" && (
               <p className="contact-form__message contact-form__message--error">
-                Something went wrong. Please try again.
+                {errorMessage || "Something went wrong. Please try again."}
               </p>
             )}
           </form>
