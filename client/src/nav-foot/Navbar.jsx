@@ -17,7 +17,7 @@ function Navbar() {
       <ul className="nav-links">
         <li><a href="/">Home</a></li>
         <li><a href="/">Services</a></li>
-        <li><a href="/">Blog</a></li>
+        <li><a href="/blogs">Blog</a></li>
         <li><a href="/">Contact</a></li>
       </ul>
 
@@ -38,7 +38,7 @@ function Navbar() {
       <div className={`mobile-menu ${menuOpen ? "active" : ""}`}>
         <a href="/">Home</a>
         <a href="/">Services</a>
-        <a href="/">Blog</a>
+        <a href="/blogs">Blog</a>
         <a href="/">Contact</a>
 
         <button className="mobile-btn">

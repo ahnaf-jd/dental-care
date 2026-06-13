@@ -43,11 +43,12 @@ function AdminDashboard() {
           <p>You are now logged in to the Dental Care Admin Portal</p>
 
 
-          <div className="dashboard-card">
+          <div className="dashboard-card" onClick={() => navigate('/admin-blogs')}>
             <div className="card-icon">✍🏻</div>
             <h3>Blogs</h3>
             <p>Manage blogs</p>
           </div>
+
 
           <div className="dashboard-card">
             <div className="card-icon">📝</div>

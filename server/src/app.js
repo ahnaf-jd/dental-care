@@ -1,10 +1,15 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const formRoutes = require("./routes/formRoutes");
 const blogRoutes = require("./routes/blogRoutes")
 
 const app = express();
+
+// Serve uploaded files statically
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
+
 
 // CORS configuration - restrict to frontend URL
 const allowedOrigins = process.env.FRONTEND_URL || 'http://localhost:5173';
