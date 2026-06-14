@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { ArrowUp } from "lucide-react";
 
 /* ── Styles ─────────────────────────────────────── */
@@ -131,6 +132,10 @@ const css = `
     transform: translateY(-2px);
   }
 
+  .ab-scroll-btn.hidden {
+    display: none !important;
+  }
+
   /* ── Responsive ── */
   @media (max-width: 900px) {
     .ab-heading { font-size: 38px; }
@@ -200,6 +205,18 @@ const css = `
 
 /* ── Component ───────────────────────────────────── */
 export default function AppointmentBanner() {
+  const [showScrollBtn, setShowScrollBtn] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Hide button if scroll position is less than 300px (hero section height)
+      setShowScrollBtn(window.scrollY > 300);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
     <>
       <style>{css}</style>
@@ -228,14 +245,24 @@ export default function AppointmentBanner() {
             <h2 className="ab-heading">
               We Are open And<br />Welcoming Patients
             </h2>
-            <button className="ab-cta">Book Appointment</button>
+            <button 
+              className="ab-cta"
+              onClick={() => {
+                const element = document.getElementById("contact");
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" });
+                }
+              }}
+            >
+              Book Appointment
+            </button>
           </div>
 
         </section>
 
         {/* Scroll-to-top */}
         <button
-          className="ab-scroll-btn"
+          className={`ab-scroll-btn ${!showScrollBtn ? "hidden" : ""}`}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           aria-label="Scroll to top"
         >

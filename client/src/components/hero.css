@@ -53,6 +53,7 @@
     letter-spacing: 0.5px;
 
     margin-bottom: 1rem;
+    animation: fadeInLeft 0.8s ease-out;
 }
 
 .hero-left h1 {
@@ -63,6 +64,7 @@
     line-height: 1.1;
 
     margin-bottom: 1.5rem;
+    animation: fadeInLeft 0.8s ease-out 0.2s both;
 }
 
 .hero-left p {
@@ -71,6 +73,7 @@
     line-height: 1.9;
 
     max-width: 600px;
+    animation: fadeInLeft 0.8s ease-out 0.4s both;
 }
 
 /* ==========================
@@ -82,34 +85,34 @@
 
     display: flex;
     align-items: center;
+    gap: 10px;
 
     width: 100%;
     max-width: 650px;
 
-    background: #ffffff;
+    background: #fff;
 
-    padding: 12px;
+    padding: 10px;
     border-radius: 8px;
 
     box-shadow: 0 15px 40px rgba(0, 0, 0, 0.06);
+    animation: fadeInUp 0.8s ease-out 0.6s both;
 }
 
 .hero-form input {
     flex: 1;
-
     height: 64px;
 
     border: none;
     outline: none;
 
     background: #f5f5f5;
+    border-radius: 6px;
 
-    padding: 0 22px;
+    padding: 0 20px;
 
     font-size: 15px;
     color: #666;
-
-    min-width: 0;
 }
 
 .hero-form button {
@@ -117,9 +120,11 @@
     height: 64px;
 
     border: none;
+    border-radius: 6px;
+
     cursor: pointer;
 
-    color: white;
+    color: #fff;
     font-size: 14px;
     font-weight: 600;
 
@@ -129,7 +134,7 @@
         #3d5ef4
     );
 
-    transition: 0.3s;
+    transition: 0.3s ease;
 }
 
 .hero-form button:hover {
@@ -375,15 +380,12 @@
         font-size: 14px;
     }
 
+
     .hero-form {
         flex-direction: column;
-        gap: 12px;
     }
 
-    .hero-form input {
-        width: 100%;
-    }
-
+    .hero-form input,
     .hero-form button {
         width: 100%;
     }

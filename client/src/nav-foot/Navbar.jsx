@@ -5,6 +5,22 @@ import "./Navbar.css";
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      setMenuOpen(false);
+    }
+  };
+
+  const handleBookAppointment = () => {
+    const element = document.getElementById("contact");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+      setMenuOpen(false);
+    }
+  };
+
   return (
     <nav className="navbar">
       {/* Logo */}
@@ -15,14 +31,14 @@ function Navbar() {
 
       {/* Desktop Navigation */}
       <ul className="nav-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="/">Services</a></li>
-        <li><a href="/">Blog</a></li>
-        <li><a href="/">Contact</a></li>
+        <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("home"); }}>Home</a></li>
+        <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("services"); }}>Services</a></li>
+        <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("blog"); }}>Blog</a></li>
+        <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("contact"); }}>Contact</a></li>
       </ul>
 
       {/* Desktop Button */}
-      <button className="appointment-btn">
+      <button className="appointment-btn" onClick={handleBookAppointment}>
         BOOK APPOINTMENT
       </button>
 
@@ -36,12 +52,12 @@ function Navbar() {
 
       {/* Mobile Menu */}
       <div className={`mobile-menu ${menuOpen ? "active" : ""}`}>
-        <a href="/">Home</a>
-        <a href="/">Services</a>
-        <a href="/">Blog</a>
-        <a href="/">Contact</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("home"); }}>Home</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("services"); }}>Services</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("blog"); }}>Blog</a>
+        <a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("contact"); }}>Contact</a>
 
-        <button className="mobile-btn">
+        <button className="mobile-btn" onClick={handleBookAppointment}>
           BOOK APPOINTMENT
         </button>
       </div>
