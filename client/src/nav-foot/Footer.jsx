@@ -12,6 +12,12 @@ import {
 } from "react-icons/fa";
 
 function Footer() {
+  const scrollToSection = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
   return (
     <footer className="footer">
 
@@ -47,10 +53,10 @@ function Footer() {
           <h3>Other Links</h3>
 
           <ul>
-            <li>+ Home</li>
-            <li>+ Services</li>
-            <li>+ Contact</li>
-            <li>+ Blog</li>
+            <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("home"); }}>+ Home</a></li>
+            <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("services"); }}>+ Services</a></li>
+            <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("contact"); }}>+ Contact</a></li>
+            <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("blog"); }}>+ Blog</a></li>
           </ul>
         </div>
 

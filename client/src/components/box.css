@@ -25,6 +25,8 @@
 
   box-shadow:
     0 20px 40px rgba(0,0,0,0.15);
+  
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .search-box input,
@@ -41,7 +43,15 @@
   border-radius: 4px;
 
   background: white;
+  color: #333;
   font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.search-box input:focus,
+.search-box select:focus {
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+  transform: scale(1.02);
 }
 
 .search-box button {
@@ -62,11 +72,16 @@
   box-shadow:
     0 10px 25px rgba(15,23,42,0.4);
 
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
 
 .search-box button:hover {
   transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.6);
+}
+
+.search-box button:active {
+  transform: translateY(0);
 }
 
 /* Responsive Design */

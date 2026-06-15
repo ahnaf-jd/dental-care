@@ -15,15 +15,26 @@ function Home() {
   return (
     <>
       <Navbar />
-      <Hero />
-      <Services />
+      <div id="home">
+        <Hero />
+      </div>
+      <div id="services">
+        <Services />
+      </div>
       <AboutUs />
       <Box />
       <TestimonialsSection />
-      <Appointment />
+      <div id="appointment">
+        <Appointment />
+      </div>
+      <div style={{ height: "60px", background: "#ffffff" }}></div>
       <FAQ />
-      <BlogSection />
-      <Contact />
+      <div id="blog">
+        <BlogSection />
+      </div>
+      <div id="contact">
+        <Contact />
+      </div>
       <Footer />
     </>
   );

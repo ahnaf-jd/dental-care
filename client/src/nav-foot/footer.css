@@ -96,6 +96,18 @@
   padding-left:4px;
 }
 
+.footer-col ul li a{
+  color:#d9e5ff;
+  text-decoration:none;
+  display:block;
+  transition:.3s;
+}
+
+.footer-col ul li a:hover{
+  color:#2ca6ff;
+  padding-left:4px;
+}
+
 /* Side-aligned layout for columns 2, 3, 4 */
 .footer-col:not(:first-child){
   display:flex;

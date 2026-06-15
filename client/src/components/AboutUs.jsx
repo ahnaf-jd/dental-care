@@ -1,30 +1,40 @@
-import "./about-us.css";
-import clinicimg from "../assets/clinic.jpg";
+import aboutImg from "../assets/clinic.jpg";
 
-export default function AboutUs() {
+import "./about-us.css";
+
+
+export default function About() {
   return (
-    <section className="about-us">
+    <section className="about">
       <div className="about-container">
-        {/* Left Side - Images */}
-        <div className="about-left">
-          <div className="about-images">
-            <div className="image-card large">
-              <img src={clinicimg} alt="Dental clinic" />
-            </div>
+
+        <div className="about-image">
+          <img src={aboutImg} alt="Dental Care" />
+
+          <div className="experience-box">
+            <h2>50</h2>
+            <p>
+              Years of <br />
+              Experience
+            </p>
           </div>
         </div>
 
-        {/* Right Side - Content */}
-        <div className="about-right">
+        <div className="about-content">
           <span className="about-tag">ABOUT US</span>
-          
-          <h2>Your Trusted Dental Care</h2>
-          
+
+          <h2>
+            We Care For Your <br />
+            Dental Health
+          </h2>
+
           <p>
-            lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae libero non enim placerat eleifend aliquam erat volutpat. Curabitur diam ex, dapibus purus sapien, cursus sed nisl tristique, commodo gravida lectus non.
+            lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel sapien eget nunc gravida sodales. Sed at felis a enim efficitur efficitur. In hac habitasse platea dictumst. Donec ac ligula id nunc efficitur convallis.
           </p>
+
         </div>
-        </div>
+
+      </div>
     </section>
   );
 }

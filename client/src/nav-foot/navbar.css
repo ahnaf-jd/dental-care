@@ -23,6 +23,9 @@
   z-index: 100;
 
   font-family: "Poppins", sans-serif;
+  
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  animation: slideInDown 0.5s ease-out;
 }
 
 .logo {
@@ -48,16 +51,29 @@
   gap: 30px;
 }
 
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .nav-links a {
   text-decoration: none;
   color: #17346d;
   font-size: 15px;
   font-weight: 600;
-  transition: 0.3s;
+  transition: all 0.3s ease;
+  position: relative;
 }
 
 .nav-links a:hover {
   color: #1e63ff;
+  transform: translateY(-2px);
 }
 
 .appointment-btn {
@@ -81,11 +97,16 @@
   box-shadow:
     0 10px 25px rgba(59, 94, 232, 0.25);
 
-  transition: 0.3s;
+  transition: all 0.3s ease;
 }
 
 .appointment-btn:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(59, 94, 232, 0.4);
+}
+
+.appointment-btn:active {
+  transform: translateY(-1px);
 }
 
 .menu-btn {

@@ -1,8 +1,44 @@
+import { useState } from "react";
 import "./Hero.css";
 import doctorImg from "../assets/doctor.png";
 import doctorImg2 from "../assets/doctor2.jpeg";
 
 export default function Hero() {
+  const [phone, setPhone] = useState("+880 ");
+  const [phoneError, setPhoneError] = useState("");
+
+  const handlePhoneChange = (e) => {
+    let value = e.target.value;
+    
+    // Only allow digits, +, and spaces
+    let sanitized = value.replace(/[^\d+\s]/g, "");
+    
+    // If user tries to remove the +880 prefix, keep it
+    if (!sanitized.startsWith("+880")) {
+      sanitized = "+880 " + sanitized.replace(/^\+?880?\s?/, "");
+    }
+    
+    // Validate format
+    if (sanitized.length > 5 && !sanitized.match(/^\+880\s\d{1,10}$/)) {
+      setPhoneError("Invalid phone number format");
+    } else {
+      setPhoneError("");
+    }
+    
+    setPhone(sanitized);
+  };
+
+  const handleCallBack = () => {
+    // Validate phone format
+    if (!phone.match(/^\+880\s\d{10}$/)) {
+      alert("Please enter a valid phone number (+880 followed by 10 digits)");
+      return;
+    }
+
+    alert(`We'll call you back at ${phone}`);
+    // You can add API call here to save the phone number
+  };
+
   return (
     <section className="hero">
       <div className="hero-container">
@@ -18,20 +54,29 @@ export default function Hero() {
           </h1>
 
           <p>
-            Donec vitae libero non enim placerat eleifend aliquam erat volutpat.
-            Curabitur diam ex, dapibus purus sapien, cursus sed nisl tristique,
-            commodo gravida lectus non.
+            lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel sapien eget nunc gravida sodales. Sed at felis a enim efficitur efficitur. In hac habitasse platea dictumst. Donec ac ligula id nunc efficitur convallis.
           </p>
 
           <div className="hero-form">
             <input
-              type="number"
-              placeholder="Your Phone Number..."
+              type="text"
+              placeholder="+880 "
+              value={phone}
+              onChange={handlePhoneChange}
+              onKeyPress={(e) => e.key === "Enter" && handleCallBack()}
+              style={{ borderColor: phoneError ? "#ef4444" : "transparent" }}
             />
 
-            <button>
+            <button onClick={handleCallBack}>
               GET CALL BACK
             </button>
+            {phoneError && <div style={{ 
+              width: "100%", 
+              color: "#ef4444", 
+              fontSize: "12px", 
+              marginTop: "5px",
+              fontWeight: "500"
+            }}>{phoneError}</div>}
           </div>
         </div>
 
