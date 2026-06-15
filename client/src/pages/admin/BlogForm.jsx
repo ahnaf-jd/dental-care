@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { ImagePlus, Loader, Upload, Video } from "lucide-react";
 import {
+  BlogApiError,
   createBlog,
   fetchBlogById,
+  mapApiErrorsToFields,
   mediaUrl,
   updateBlog,
 } from "../../services/blogApi";
@@ -14,7 +16,7 @@ function FileDropZone({ id, label, accept, multiple, hint, icon: Icon, onChange,
       <label htmlFor={id} className="upload-dropzone">
         <Icon size={22} />
         <span>{hint}</span>
-        <small>Click or drag files here</small>
+        <small>Click to choose {multiple ? "files" : "a file"}</small>
         <input
           id={id}
           type="file"
@@ -34,6 +36,7 @@ export default function BlogForm({ mode, blogId, onCancel, onSaved }) {
   const [loading, setLoading] = useState(false);
   const [initialLoading, setInitialLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
 
   const [title, setTitle] = useState("");
   const [excerpt, setExcerpt] = useState("");
@@ -51,9 +54,7 @@ export default function BlogForm({ mode, blogId, onCancel, onSaved }) {
 
   const previews = useMemo(() => {
     const cover = coverImageFile ? URL.createObjectURL(coverImageFile) : null;
-    const gallery = galleryFiles.length
-      ? galleryFiles.map((f) => URL.createObjectURL(f))
-      : [];
+    const gallery = galleryFiles.map((file) => URL.createObjectURL(file));
     const video = videoFile ? URL.createObjectURL(videoFile) : null;
     return { cover, gallery, video };
   }, [coverImageFile, galleryFiles, videoFile]);
@@ -61,7 +62,7 @@ export default function BlogForm({ mode, blogId, onCancel, onSaved }) {
   useEffect(() => {
     return () => {
       if (previews.cover) URL.revokeObjectURL(previews.cover);
-      previews.gallery.forEach((u) => URL.revokeObjectURL(u));
+      previews.gallery.forEach((url) => URL.revokeObjectURL(url));
       if (previews.video) URL.revokeObjectURL(previews.video);
     };
   }, [previews]);
@@ -99,27 +100,42 @@ export default function BlogForm({ mode, blogId, onCancel, onSaved }) {
     loadBlog();
   }, [isEdit, blogId]);
 
+  const clearFieldError = (field) => {
+    setFieldErrors((prev) => ({ ...prev, [field]: "" }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setFieldErrors({});
 
-    if (!title.trim()) return setError("Title is required");
-    if (!content.trim()) return setError("Content is required");
+    const localErrors = {};
+    if (!title.trim()) localErrors.title = "Title is required";
+    if (!content.trim()) localErrors.content = "Content is required";
+    if (title.trim().length > 0 && title.trim().length < 3) {
+      localErrors.title = "Title must be at least 3 characters";
+    }
+    if (content.trim().length > 0 && content.trim().length < 10) {
+      localErrors.content = "Content must be at least 10 characters";
+    }
+
+    if (Object.keys(localErrors).length) {
+      setFieldErrors(localErrors);
+      return;
+    }
 
     try {
       setLoading(true);
-      setError("");
 
       const formData = new FormData();
       formData.append("title", title.trim());
       formData.append("excerpt", excerpt.trim());
       formData.append("content", content.trim());
       formData.append("author", author.trim() || "Admin");
-      formData.append("published", published);
+      formData.append("published", String(published));
 
       if (coverImageFile) formData.append("coverImage", coverImageFile);
-      if (galleryFiles.length) {
-        galleryFiles.forEach((f) => formData.append("galleryImages", f));
-      }
+      galleryFiles.forEach((file) => formData.append("galleryImages", file));
       if (videoFile) formData.append("video", videoFile);
 
       const data = isEdit
@@ -128,6 +144,11 @@ export default function BlogForm({ mode, blogId, onCancel, onSaved }) {
 
       onSaved?.(data.data);
     } catch (e) {
+      if (e instanceof BlogApiError && e.errors.length) {
+        setFieldErrors(mapApiErrorsToFields(e.errors));
+        setError("Please fix the highlighted fields.");
+        return;
+      }
       setError(e.message || "Save failed");
     } finally {
       setLoading(false);
@@ -153,15 +174,19 @@ export default function BlogForm({ mode, blogId, onCancel, onSaved }) {
         <form className="admin-blog-form__form" onSubmit={handleSubmit}>
           <div className="admin-blog-form__section">
             <h3>Post Details</h3>
+
             <div className="form-row">
               <label htmlFor="blog-title">Title *</label>
               <input
                 id="blog-title"
                 value={title}
-                onChange={(e) => setTitle(e.target.value)}
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  clearFieldError("title");
+                }}
                 placeholder="Enter blog title"
-                required
               />
+              {fieldErrors.title ? <span className="field-error">{fieldErrors.title}</span> : null}
             </div>
 
             <div className="form-row">
@@ -169,10 +194,14 @@ export default function BlogForm({ mode, blogId, onCancel, onSaved }) {
               <textarea
                 id="blog-excerpt"
                 value={excerpt}
-                onChange={(e) => setExcerpt(e.target.value)}
+                onChange={(e) => {
+                  setExcerpt(e.target.value);
+                  clearFieldError("excerpt");
+                }}
                 rows={3}
-                placeholder="Short summary shown on listing cards"
+                placeholder="Short summary for listing cards"
               />
+              {fieldErrors.excerpt ? <span className="field-error">{fieldErrors.excerpt}</span> : null}
             </div>
 
             <div className="form-row">
@@ -180,11 +209,14 @@ export default function BlogForm({ mode, blogId, onCancel, onSaved }) {
               <textarea
                 id="blog-content"
                 value={content}
-                onChange={(e) => setContent(e.target.value)}
+                onChange={(e) => {
+                  setContent(e.target.value);
+                  clearFieldError("content");
+                }}
                 rows={10}
                 placeholder="Write your article content..."
-                required
               />
+              {fieldErrors.content ? <span className="field-error">{fieldErrors.content}</span> : null}
             </div>
 
             <div className="admin-blog-form__row">
@@ -210,13 +242,17 @@ export default function BlogForm({ mode, blogId, onCancel, onSaved }) {
           </div>
 
           <div className="admin-blog-form__section">
-            <h3>Media (uploaded to ImageKit)</h3>
+            <h3>Media (ImageKit CDN)</h3>
+            <p className="form-hint form-hint--section">
+              Cover image is used on blog cards. Video and gallery appear on the article page.
+              On edit, leave a field empty to keep existing files.
+            </p>
 
             <FileDropZone
               id="blog-cover"
               label="Cover Image"
-              accept="image/*"
-              hint="Upload cover image"
+              accept="image/jpeg,image/png,image/webp,image/gif"
+              hint="Cover image for listings"
               icon={ImagePlus}
               onChange={(e) => setCoverImageFile(e.target.files?.[0] || null)}
             >
@@ -228,20 +264,20 @@ export default function BlogForm({ mode, blogId, onCancel, onSaved }) {
             <FileDropZone
               id="blog-gallery"
               label="Gallery Images"
-              accept="image/*"
+              accept="image/jpeg,image/png,image/webp,image/gif"
               multiple
-              hint="Upload gallery images"
+              hint="Gallery images for article"
               icon={Upload}
               onChange={(e) => setGalleryFiles(Array.from(e.target.files || []))}
             >
               {galleryPreview.length ? (
                 <div className="preview-gallery">
-                  {galleryPreview.map((src, idx) => (
+                  {galleryPreview.map((src, index) => (
                     <img
-                      key={idx}
+                      key={index}
                       className="preview-thumb"
                       src={src}
-                      alt={`Gallery preview ${idx + 1}`}
+                      alt={`Gallery preview ${index + 1}`}
                     />
                   ))}
                 </div>
@@ -251,8 +287,8 @@ export default function BlogForm({ mode, blogId, onCancel, onSaved }) {
             <FileDropZone
               id="blog-video"
               label="Video"
-              accept="video/*"
-              hint="Upload video"
+              accept="video/mp4,video/webm,video/quicktime,video/mpeg"
+              hint="Optional article video"
               icon={Video}
               onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
             >
@@ -266,12 +302,7 @@ export default function BlogForm({ mode, blogId, onCancel, onSaved }) {
             <button type="submit" className="btn btn-primary" disabled={loading}>
               {loading ? "Uploading & Saving..." : isEdit ? "Update Post" : "Create Post"}
             </button>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              onClick={onCancel}
-              disabled={loading}
-            >
+            <button type="button" className="btn btn-ghost" onClick={onCancel} disabled={loading}>
               Cancel
             </button>
           </div>

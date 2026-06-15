@@ -1,36 +1,21 @@
-const Blog = require("../models/blog.model");
-const imagekitService = require("./imagekitService");
+const Blog = require('../models/blog.model');
+const imagekitService = require('./imagekitService');
 
-const createBlog = async (data) => {
-  const blog = await Blog.create(data);
-  return blog;
-};
+const createBlog = async (data) => Blog.create(data);
 
 const getAllBlogs = async (filters = {}) => {
   const query = {};
+  if (filters.published) query.published = true;
 
-  if (filters.published) {
-    query.published = true;
-  }
-
-  const blogs = await Blog.find(query)
-    .sort({ createdAt: -1 })
-    .select('-__v');
-
-  return blogs;
+  return Blog.find(query).sort({ createdAt: -1 }).select('-__v');
 };
 
-const getBlogById = async (id) => {
-  const blog = await Blog.findById(id).select('-__v');
-  return blog;
-};
+const getBlogById = async (id) => Blog.findById(id).select('-__v');
 
 const getBlogBySlug = async (slug, { publishedOnly = false } = {}) => {
   const query = { slug };
   if (publishedOnly) query.published = true;
-
-  const blog = await Blog.findOne(query).select('-__v');
-  return blog;
+  return Blog.findOne(query).select('-__v');
 };
 
 const removeCoverAsset = async (blog) => {
@@ -46,9 +31,7 @@ const removeGalleryAssets = async (blog) => {
   const fileIds = blog.galleryImageFileIds || [];
 
   await Promise.all(
-    images.map((url, index) =>
-      imagekitService.deleteMediaAsset(url, fileIds[index])
-    )
+    images.map((url, index) => imagekitService.deleteMediaAsset(url, fileIds[index]))
   );
 };
 
@@ -68,9 +51,9 @@ const updateBlog = async (id, updateData) => {
     await removeGalleryAssets(blog);
   }
 
-  Object.keys(updateData).forEach((key) => {
-    if (updateData[key] !== undefined) {
-      blog[key] = updateData[key];
+  Object.entries(updateData).forEach(([key, value]) => {
+    if (value !== undefined) {
+      blog[key] = value;
     }
   });
 
@@ -99,15 +82,9 @@ const searchBlogs = async (query, { publishedOnly = false } = {}) => {
     ],
   };
 
-  if (publishedOnly) {
-    filter.published = true;
-  }
+  if (publishedOnly) filter.published = true;
 
-  const blogs = await Blog.find(filter)
-    .sort({ createdAt: -1 })
-    .select('-__v');
-
-  return blogs;
+  return Blog.find(filter).sort({ createdAt: -1 }).select('-__v');
 };
 
 const getPublishedBlogs = async (page = 1, limit = 10) => {
@@ -125,7 +102,7 @@ const getPublishedBlogs = async (page = 1, limit = 10) => {
     blogs,
     pagination: {
       current: page,
-      total: Math.ceil(total / limit),
+      total: Math.ceil(total / limit) || 1,
       count: blogs.length,
       totalItems: total,
     },
@@ -137,8 +114,8 @@ module.exports = {
   getAllBlogs,
   getBlogById,
   getBlogBySlug,
-  updateBlog,
-  deleteBlog,
   searchBlogs,
   getPublishedBlogs,
+  updateBlog,
+  deleteBlog,
 };

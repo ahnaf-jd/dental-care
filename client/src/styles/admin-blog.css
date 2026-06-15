@@ -521,6 +521,23 @@
   border: 1px solid #e5e7eb;
 }
 
+.form-hint {
+  font-size: 12px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.form-hint--section {
+  margin-bottom: 12px;
+}
+
+.field-error {
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .confirm-modal-overlay {
   position: fixed;
   inset: 0;

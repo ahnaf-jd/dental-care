@@ -15,13 +15,23 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 const allowedOrigins = process.env.FRONTEND_URL || 'http://localhost:5173';
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || /^http:\/\/localhost:\d+$/.test(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
+    const allowed = [
+      process.env.FRONTEND_URL,
+      'http://localhost:5173',
+      'http://localhost:3000',
+    ].filter(Boolean);
+
+    if (!origin) return callback(null, true);
+
+    // Allow exact-match origins or configured FRONTEND_URL
+    if (allowed.includes(origin)) return callback(null, true);
+
+    // Allow localhost/dev with any port
+    if (/^http:\/\/localhost:\d+$/.test(origin)) return callback(null, true);
+
+    return callback(new Error('Not allowed by CORS'));
   },
-  credentials: true
+  credentials: true,
 }));
 
 app.use(express.json());

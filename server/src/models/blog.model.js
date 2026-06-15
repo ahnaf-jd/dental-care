@@ -46,12 +46,12 @@ const blogSchema = new mongoose.Schema(
     galleryImages: [
       {
         type: String,
-      }
+      },
     ],
     galleryImageFileIds: [
       {
         type: String,
-      }
+      },
     ],
     video: {
       type: String,
@@ -78,30 +78,25 @@ const blogSchema = new mongoose.Schema(
 );
 
 // Auto-generate unique slug before saving
-blogSchema.pre('save', async function(next) {
-  if (!this.isModified('title')) return next();
+blogSchema.pre('save', async function() {
+  if (!this.isModified('title')) return;
 
-  try {
-    const baseSlug = generateSlug(this.title);
-    let slug = baseSlug;
-    let counter = 1;
+  const baseSlug = generateSlug(this.title);
+  let slug = baseSlug;
+  let counter = 1;
 
-    while (true) {
-      const existing = await mongoose.models.Blog.findOne({
-        slug,
-        _id: { $ne: this._id },
-      });
+  while (true) {
+    const existing = await mongoose.models.Blog.findOne({
+      slug,
+      _id: { $ne: this._id },
+    });
 
-      if (!existing) break;
-      slug = `${baseSlug}-${counter}`;
-      counter += 1;
-    }
-
-    this.slug = slug;
-    next();
-  } catch (error) {
-    next(error);
+    if (!existing) break;
+    slug = `${baseSlug}-${counter}`;
+    counter += 1;
   }
+
+  this.slug = slug;
 });
 
 // Handle duplicate slug error

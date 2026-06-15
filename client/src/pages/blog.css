@@ -196,6 +196,14 @@
   border: 1px solid #fecaca;
 }
 
+.field-error {
+  display: block;
+  color: #b91c1c;
+  font-size: 0.85rem;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
 .blog-pagination {
   display: flex;
   align-items: center;

@@ -6,11 +6,30 @@ export function mediaUrl(path) {
   return `${API_URL}${path}`;
 }
 
-async function parseResponse(res) {
-  const data = await res.json();
-  if (!res.ok || !data.success) {
-    throw new Error(data.message || "Request failed");
+export class BlogApiError extends Error {
+  constructor(message, { errors = [], status } = {}) {
+    super(message);
+    this.name = "BlogApiError";
+    this.errors = errors;
+    this.status = status;
   }
+}
+
+async function parseResponse(res) {
+  let data = {};
+  try {
+    data = await res.json();
+  } catch {
+    throw new BlogApiError("Invalid server response", { status: res.status });
+  }
+
+  if (!res.ok || !data.success) {
+    throw new BlogApiError(data.message || "Request failed", {
+      errors: data.errors || [],
+      status: res.status,
+    });
+  }
+
   return data;
 }
 
@@ -70,4 +89,14 @@ export function formatBlogDate(dateString) {
     month: "long",
     year: "numeric",
   });
+}
+
+export function mapApiErrorsToFields(errors = []) {
+  const fieldErrors = {};
+  errors.forEach((err) => {
+    const field = err.field || err.path?.[0];
+    const message = err.message || err.msg;
+    if (field && message) fieldErrors[field] = message;
+  });
+  return fieldErrors;
 }

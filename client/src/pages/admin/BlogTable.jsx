@@ -1,7 +1,15 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Edit2, ImageIcon, Loader, Search, Trash2 } from "lucide-react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { Edit2, ImageIcon, Loader, Search, Trash2, Video } from "lucide-react";
 import ConfirmModal from "../../components/ConfirmModal";
 import { deleteBlog, fetchBlogs, mediaUrl } from "../../services/blogApi";
+
+function computeStats(blogs) {
+  return {
+    total: blogs.length,
+    published: blogs.filter((b) => b.published).length,
+    drafts: blogs.filter((b) => !b.published).length,
+  };
+}
 
 export default function BlogTable({ onEdit, refreshKey, onStatsChange }) {
   const [blogs, setBlogs] = useState([]);
@@ -12,28 +20,26 @@ export default function BlogTable({ onEdit, refreshKey, onStatsChange }) {
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
 
-  useEffect(() => {
-    const loadBlogs = async () => {
-      try {
-        setLoading(true);
-        setError("");
-        const data = await fetchBlogs();
-        const list = data.data || [];
-        setBlogs(list);
-        onStatsChange?.({
-          total: list.length,
-          published: list.filter((b) => b.published).length,
-          drafts: list.filter((b) => !b.published).length,
-        });
-      } catch (e) {
-        setError(e.message || "Failed to load blogs");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const loadBlogs = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError("");
+      const data = await fetchBlogs();
+      setBlogs(data.data || []);
+    } catch (e) {
+      setError(e.message || "Failed to load blogs");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
 
+  useEffect(() => {
     loadBlogs();
-  }, [refreshKey, onStatsChange]);
+  }, [refreshKey, loadBlogs]);
+
+  useEffect(() => {
+    onStatsChange?.(computeStats(blogs));
+  }, [blogs, onStatsChange]);
 
   const filteredBlogs = useMemo(() => {
     return blogs.filter((blog) => {
@@ -58,15 +64,7 @@ export default function BlogTable({ onEdit, refreshKey, onStatsChange }) {
       setDeleting(true);
       setError("");
       await deleteBlog(deleteTarget._id);
-      setBlogs((prev) => {
-        const next = prev.filter((b) => b._id !== deleteTarget._id);
-        onStatsChange?.({
-          total: next.length,
-          published: next.filter((b) => b.published).length,
-          drafts: next.filter((b) => !b.published).length,
-        });
-        return next;
-      });
+      setBlogs((prev) => prev.filter((b) => b._id !== deleteTarget._id));
       setDeleteTarget(null);
     } catch (e) {
       setError(e.message || "Delete failed");
@@ -131,6 +129,8 @@ export default function BlogTable({ onEdit, refreshKey, onStatsChange }) {
                     <div className="admin-blog-thumb">
                       {blog.coverImage ? (
                         <img src={mediaUrl(blog.coverImage)} alt="" />
+                      ) : blog.video ? (
+                        <Video size={18} />
                       ) : (
                         <ImageIcon size={18} />
                       )}

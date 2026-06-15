@@ -88,10 +88,14 @@ export default function BlogDetail() {
               </div>
 
               {blog.video ? (
-                <section className="blog-detail__video">
-                  <h2>Related Video</h2>
-                  <video src={mediaUrl(blog.video)} controls />
-                </section>
+                <div className="blog-detail__video">
+                  <h2>Video</h2>
+                  <video
+                    src={mediaUrl(blog.video)}
+                    controls
+                    style={{ width: "100%", borderRadius: "12px", background: "#000" }}
+                  />
+                </div>
               ) : null}
 
               {blog.galleryImages?.length ? (
