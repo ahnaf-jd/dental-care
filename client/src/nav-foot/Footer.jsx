@@ -8,33 +8,29 @@ import {
   FaMapMarkerAlt,
   FaPhoneAlt,
   FaEnvelope,
-  FaArrowUp,
 } from "react-icons/fa";
+import { useSiteContent } from "../context/SiteContentContext";
 
 function Footer() {
+  const { footer, services } = useSiteContent();
+
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
+
   return (
     <footer className="footer">
-
       <div className="footer-container">
-
-        {/* Column 1 */}
         <div className="footer-col">
           <div className="footer-logo">
             <FaTooth className="tooth-icon" />
-            <h2>Dental Care</h2>
+            <h2>{footer.brandName}</h2>
           </div>
 
-          <p>
-            lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec
-            euismod, nisl eget consectetur sagittis, nisl nunc consectetur nisi,
-            euismod aliquam nisl nunc euismod nisi.
-          </p>
+          <p>{footer.description}</p>
 
           <div className="footer-info">
             <div className="icon-box">
@@ -42,39 +38,73 @@ function Footer() {
             </div>
 
             <div>
-              <span>Monday - Saturday:</span>
-              <h4>9:00am - 10:00pm</h4>
+              <span>{footer.hoursLabel}</span>
+              <h4>{footer.hours}</h4>
             </div>
           </div>
         </div>
 
-        {/* Column 2 */}
         <div className="footer-col">
           <h3>Other Links</h3>
 
           <ul>
-            <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("home"); }}>+ Home</a></li>
-            <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("services"); }}>+ Services</a></li>
-            <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("contact"); }}>+ Contact</a></li>
-            <li><a href="#" onClick={(e) => { e.preventDefault(); scrollToSection("blog"); }}>+ Blog</a></li>
+            <li>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection("home");
+                }}
+              >
+                + Home
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection("services");
+                }}
+              >
+                + Services
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection("contact");
+                }}
+              >
+                + Contact
+              </a>
+            </li>
+            <li>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection("blog");
+                }}
+              >
+                + Blog
+              </a>
+            </li>
           </ul>
         </div>
 
-        {/* Column 3 */}
         <div className="footer-col">
           <h3>Our Services</h3>
 
           <ul>
-            <li>+ Root Canal</li>
-            <li>+ Alignment Teeth</li>
-            <li>+ Cosmetic Teeth</li>
-            <li>+ Oral Hygiene</li>
-            <li>+ Live Advisory</li>
-            <li>+ Cavity Inspection</li>
+            {services.items.map((item, index) => (
+              <li key={index}>+ {item.title}</li>
+            ))}
           </ul>
         </div>
 
-        {/* Column 4 */}
         <div className="footer-col">
           <h3>Contact Us</h3>
 
@@ -83,9 +113,7 @@ function Footer() {
               <FaMapMarkerAlt />
             </div>
 
-            <p>
-            Savar, Dhaka, Bangladesh
-            </p>
+            <p>{footer.address}</p>
           </div>
 
           <div className="contact-item">
@@ -93,9 +121,7 @@ function Footer() {
               <FaPhoneAlt />
             </div>
 
-            <p>
-              +880 1600000000
-            </p>
+            <p>{footer.phone}</p>
           </div>
 
           <div className="contact-item">
@@ -104,21 +130,19 @@ function Footer() {
             </div>
 
             <p>
-              info@example.com
-              <br />
-              help@example.com
+              {footer.emails.split("\n").map((line, i, arr) => (
+                <span key={i}>
+                  {line}
+                  {i < arr.length - 1 && <br />}
+                </span>
+              ))}
             </p>
           </div>
         </div>
       </div>
 
-      {/* Bottom Bar */}
-
       <div className="footer-bottom">
-
-        <p>
-          Copyright © 2026 Dental. All rights reserved.
-        </p>
+        <p>{footer.copyright}</p>
 
         <div className="social-icons">
           <a href="/">
@@ -134,8 +158,6 @@ function Footer() {
           </a>
         </div>
       </div>
-
-
     </footer>
   );
 }

@@ -50,7 +50,7 @@ function AdminDashboard() {
           </div>
 
 
-          <div className="dashboard-card">
+          <div className="dashboard-card" onClick={() => navigate("/admin-content")}>
             <div className="card-icon">📝</div>
             <h3>Content</h3>
             <p>Manage website content</p>

@@ -8,6 +8,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import Messages from "./pages/Messages";
 import ProtectedRoute from "./components/ProtectedRoute";
 import BlogAdmin from "./pages/admin/BlogAdmin";
+import ContentAdmin from "./pages/admin/ContentAdmin";
 
 function App() {
   return (
@@ -29,6 +30,14 @@ function App() {
         element={
           <ProtectedRoute>
             <BlogAdmin />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin-content"
+        element={
+          <ProtectedRoute>
+            <ContentAdmin />
           </ProtectedRoute>
         }
       />

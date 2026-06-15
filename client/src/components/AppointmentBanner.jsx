@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { ArrowUp } from "lucide-react";
+import { useSiteContent } from "../context/SiteContentContext";
+import { mediaUrl } from "../services/contentApi";
 
-/* ── Styles ─────────────────────────────────────── */
 const css = `
   *, *::before, *::after {
     margin: 0;
@@ -13,14 +14,12 @@ const css = `
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
   }
 
-  /* ── Outer shell: provides white space for the doctor to overflow into ── */
  .ab-shell {
   position: relative;
   background: #EEF2F7;
   padding-top: 120px;
   }
 
-  /* ── Dark navy band ── */
   .ab-band {
     background: #0C1A50;
     position: relative;
@@ -30,7 +29,6 @@ const css = `
     min-height: 410px;
   }
 
-  /* ── Left column ── */
   .ab-left {
     flex: 0 0 44%;
     position: relative;
@@ -41,11 +39,6 @@ const css = `
     overflow: visible;
   }
 
-  /*
-   * Blue rounded blob – clips the doctor photo inside.
-   * Height = section height (410) + shell overflow (120) = 530px
-   * so the blob's top sits exactly at the shell padding boundary.
-   */
   .ab-blob {
     position: absolute;
     bottom: 0;
@@ -67,7 +60,6 @@ const css = `
     display: block;
   }
 
-  /* ── Right column ── */
   .ab-right {
     flex: 1;
     padding: 0 64px 0 20px;
@@ -107,7 +99,6 @@ const css = `
   .ab-cta:hover  { background: #2563EB; transform: translateY(-1px); }
   .ab-cta:active { transform: translateY(0); }
 
-  /* ── Fixed scroll-to-top button ── */
   .ab-scroll-btn {
     position: fixed;
     bottom: 28px;
@@ -136,25 +127,21 @@ const css = `
     display: none !important;
   }
 
-  /* ── Responsive ── */
   @media (max-width: 900px) {
     .ab-heading { font-size: 38px; }
   }
 
   @media (max-width: 700px) {
-    /* Keep padding-top so the doctor's head overflows above the dark band */
     .ab-shell {
       padding-top: 80px;
     }
 
-    /* Stack into a single column */
     .ab-band {
       flex-direction: column;
       align-items: stretch;
       min-height: auto;
     }
 
-    /* Image row: fixed height; overflow: visible so blob pokes above */
     .ab-left {
       flex: none;
       width: 100%;
@@ -165,10 +152,6 @@ const css = `
       align-items: flex-end;
     }
 
-    /*
-     * Blob height = ab-left height (330) + shell padding-top (80) = 410px
-     * This ensures the blob top aligns with the white shell edge.
-     */
     .ab-blob {
       width: 272px;
       height: 410px;
@@ -177,7 +160,6 @@ const css = `
       transform: translateX(-50%);
     }
 
-    /* Text sits below the image row */
     .ab-right {
       padding: 28px 22px 52px;
     }
@@ -203,13 +185,16 @@ const css = `
   }
 `;
 
-/* ── Component ───────────────────────────────────── */
+const DEFAULT_IMAGE =
+  "https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=500&q=80";
+
 export default function AppointmentBanner() {
+  const { appointment } = useSiteContent();
   const [showScrollBtn, setShowScrollBtn] = useState(false);
+  const bannerImage = mediaUrl(appointment.image) || DEFAULT_IMAGE;
 
   useEffect(() => {
     const handleScroll = () => {
-      // Hide button if scroll position is less than 300px (hero section height)
       setShowScrollBtn(window.scrollY > 300);
     };
 
@@ -223,29 +208,20 @@ export default function AppointmentBanner() {
 
       <div className="ab-shell">
         <section className="ab-band">
-
-          {/* Left: blob + doctor photo */}
           <div className="ab-left">
             <div className="ab-blob">
-              {/*
-                For the exact cut-out effect, replace src with a
-                transparent-background PNG of your dentist.
-              */}
-              <img
-                className="ab-doctor-img"
-                src="https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=500&q=80"
-                alt="Dental professional"
-              />
+              <img className="ab-doctor-img" src={bannerImage} alt="Dental professional" />
             </div>
           </div>
 
-          {/* Right: text + CTA */}
           <div className="ab-right">
-            <p className="ab-eyebrow">Book Dentail Appointment</p>
+            <p className="ab-eyebrow">{appointment.eyebrow}</p>
             <h2 className="ab-heading">
-              We Are open And<br />Welcoming Patients
+              {appointment.headingLine1}
+              <br />
+              {appointment.headingLine2}
             </h2>
-            <button 
+            <button
               className="ab-cta"
               onClick={() => {
                 const element = document.getElementById("contact");
@@ -254,13 +230,11 @@ export default function AppointmentBanner() {
                 }
               }}
             >
-              Book Appointment
+              {appointment.ctaText}
             </button>
           </div>
-
         </section>
 
-        {/* Scroll-to-top */}
         <button
           className={`ab-scroll-btn ${!showScrollBtn ? "hidden" : ""}`}
           onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}

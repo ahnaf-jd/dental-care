@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { Map, Clock, Mail } from "lucide-react";
+import { useSiteContent } from "../context/SiteContentContext";
+import { API_URL } from "../services/blogApi";
 
-const API_URL = "http://localhost:5000/api/forms";
+const FORMS_API = `${API_URL}/api/forms`;
 
 const initialForm = {
   name: "",
@@ -12,6 +14,7 @@ const initialForm = {
 };
 
 export default function ContactSection() {
+  const { contact } = useSiteContent();
   const [formData, setFormData] = useState(initialForm);
   const [status, setStatus] = useState("idle"); // idle | sending | success | error
   const [errorMessage, setErrorMessage] = useState("");
@@ -28,7 +31,7 @@ export default function ContactSection() {
     setErrorMessage("");
 
     try {
-      const response = await fetch(API_URL + "/submit", {
+      const response = await fetch(`${FORMS_API}/submit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -251,13 +254,13 @@ export default function ContactSection() {
       `}</style>
 
       <div className="contact-section__header">
-        <p className="contact-section__eyebrow">GET IN TOUCH</p>
-        <h2 className="contact-section__title">Contact Us</h2>
+        <p className="contact-section__eyebrow">{contact.eyebrow}</p>
+        <h2 className="contact-section__title">{contact.title}</h2>
       </div>
 
       <div className="contact-section__grid">
         <div className="contact-form-panel">
-          <h3 className="contact-form-panel__title">Make Appointment</h3>
+          <h3 className="contact-form-panel__title">{contact.formTitle}</h3>
 
           <form className="contact-form" onSubmit={handleSubmit}>
             <div className="contact-form__row">
@@ -335,9 +338,12 @@ export default function ContactSection() {
             <div className="contact-info__content">
               <h3>Office Address</h3>
               <p>
-                380 St Kilda Road, Melbourne
-                <br />
-                VIC 3004, Australia
+                {contact.address.split("\n").map((line, i, arr) => (
+                  <span key={i}>
+                    {line}
+                    {i < arr.length - 1 && <br />}
+                  </span>
+                ))}
               </p>
             </div>
           </div>
@@ -349,9 +355,12 @@ export default function ContactSection() {
             <div className="contact-info__content">
               <h3>Working Hours</h3>
               <p>
-                Monday to Friday 09:00 to 18:30
-                <br />
-                Saturday 15:30
+                {contact.hours.split("\n").map((line, i, arr) => (
+                  <span key={i}>
+                    {line}
+                    {i < arr.length - 1 && <br />}
+                  </span>
+                ))}
               </p>
             </div>
           </div>
@@ -363,9 +372,12 @@ export default function ContactSection() {
             <div className="contact-info__content">
               <h3>Message Us</h3>
               <p>
-                support@example.com
-                <br />
-                info@example.com
+                {contact.emails.split("\n").map((line, i, arr) => (
+                  <span key={i}>
+                    {line}
+                    {i < arr.length - 1 && <br />}
+                  </span>
+                ))}
               </p>
             </div>
           </div>

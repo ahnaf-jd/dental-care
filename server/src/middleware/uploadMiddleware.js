@@ -16,7 +16,18 @@ const LIMITS = {
 };
 
 const fileFilter = (req, file, cb) => {
-  if (file.fieldname === 'coverImage' || file.fieldname === 'galleryImages') {
+  const imageFields = [
+    'coverImage',
+    'galleryImages',
+    'heroDoctorImage',
+    'aboutImage',
+    'servicesCenterImage',
+    'appointmentImage',
+    'faqImage',
+  ];
+  const isTestimonialImage = /^testimonialImage_\d+$/.test(file.fieldname);
+
+  if (imageFields.includes(file.fieldname) || isTestimonialImage) {
     if (IMAGE_TYPES.includes(file.mimetype)) {
       return cb(null, true);
     }
@@ -98,5 +109,34 @@ const uploadBlogFiles = (req, res, next) => {
   });
 };
 
+const contentUploadFields = [
+  { name: 'heroDoctorImage', maxCount: 1 },
+  { name: 'aboutImage', maxCount: 1 },
+  { name: 'servicesCenterImage', maxCount: 1 },
+  { name: 'appointmentImage', maxCount: 1 },
+  { name: 'faqImage', maxCount: 1 },
+  ...Array.from({ length: 6 }, (_, i) => ({ name: `testimonialImage_${i}`, maxCount: 1 })),
+];
+
+const uploadContentFiles = (req, res, next) => {
+  upload.fields(contentUploadFields)(req, res, (err) => {
+    if (!err) return next();
+
+    if (err instanceof multer.MulterError) {
+      const message =
+        err.code === 'LIMIT_FILE_SIZE'
+          ? 'File exceeds the maximum allowed size'
+          : err.code === 'LIMIT_UNEXPECTED_FILE'
+            ? `Unexpected file field: ${err.field}`
+            : err.message;
+
+      return res.status(400).json({ success: false, message });
+    }
+
+    return res.status(400).json({ success: false, message: err.message });
+  });
+};
+
 module.exports = upload;
 module.exports.uploadBlogFiles = uploadBlogFiles;
+module.exports.uploadContentFiles = uploadContentFiles;

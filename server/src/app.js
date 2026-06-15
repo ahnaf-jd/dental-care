@@ -3,7 +3,8 @@ const cors = require("cors");
 const path = require("path");
 
 const formRoutes = require("./routes/formRoutes");
-const blogRoutes = require("./routes/blogRoutes")
+const blogRoutes = require("./routes/blogRoutes");
+const contentRoutes = require("./routes/contentRoutes");
 
 const app = express();
 
@@ -38,6 +39,7 @@ app.use(express.json());
 
 app.use("/api/forms", formRoutes);
 app.use("/api/blogs", blogRoutes);
+app.use("/api/content", contentRoutes);
 
 // Global error handler middleware
 app.use((err, req, res, next) => {

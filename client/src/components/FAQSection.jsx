@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { ChevronDown, ChevronLeft } from "lucide-react";
+import { useSiteContent } from "../context/SiteContentContext";
+import { mediaUrl } from "../services/contentApi";
 
-/* ── Styles ─────────────────────────────────────── */
 const css = `
   *, *::before, *::after {
     margin: 0;
@@ -13,7 +14,6 @@ const css = `
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
   }
 
-  /* ── Section shell ── */
   .faq-section {
     display: flex;
     width: 100%;
@@ -22,14 +22,12 @@ const css = `
     overflow: hidden;
   }
 
-  /* ── White gap after FAQ section ── */
   .faq-gap {
     width: 100%;
     height: 80px;
     background: #ffffff;
   }
 
-  /* ── Left panel ── */
   .faq-left {
     flex: 0 0 50%;
     background: #0F1C58;
@@ -57,7 +55,6 @@ const css = `
     margin-bottom: 32px;
   }
 
-  /* ── Accordion list ── */
   .faq-list {
     display: flex;
     flex-direction: column;
@@ -70,7 +67,6 @@ const css = `
     overflow: hidden;
   }
 
-  /* ── Question row ── */
   .faq-row {
     display: flex;
     align-items: stretch;
@@ -95,7 +91,6 @@ const css = `
     transition: color 0.2s;
   }
 
-  /* ── Toggle button ── */
   .faq-btn {
     width: 44px;
     min-width: 44px;
@@ -114,7 +109,6 @@ const css = `
     background: #2563EB;
   }
 
-  /* ── Answer ── */
   @keyframes slideDown {
     from { opacity: 0; transform: translateY(-4px); }
     to   { opacity: 1; transform: translateY(0);   }
@@ -128,12 +122,11 @@ const css = `
     animation: slideDown 0.22s ease;
   }
 
-  /* ── Right panel ── */
   .faq-right {
     flex: 0 0 50%;
     overflow: hidden;
     position: relative;
-    background: #c9d6e3; /* fallback while image loads */
+    background: #c9d6e3;
   }
 
   .faq-right img {
@@ -144,7 +137,6 @@ const css = `
     display: block;
   }
 
-  /* ── Responsive ── */
   @media (max-width: 768px) {
     .faq-section {
       flex-direction: column;
@@ -180,77 +172,50 @@ const css = `
   }
 `;
 
-/* ── Data ────────────────────────────────────────── */
-const faqs = [
-  {
-    id: 1,
-    question: "Vivamus rhoncus ante a ipsum imperdiet ?",
-    answer:
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip",
-  },
-  {
-    id: 2,
-    question: "Integer id dolor at nisi laoreet iaculis vitae ?",
-    answer:
-      "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa quae ab illo inventore veritatis.",
-  },
-  {
-    id: 3,
-    question: "Donec venenatis elit dignissim, posuere ?",
-    answer:
-      "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores.",
-  },
-  {
-    id: 4,
-    question: "Curabitur varius, massa sit amet egestas ?",
-    answer:
-      "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.",
-  },
-];
+const DEFAULT_IMAGE =
+  "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=900&q=80";
 
-/* ── Component ───────────────────────────────────── */
 export default function FAQSection() {
-  const [openId, setOpenId] = useState(1); // first item open by default
+  const { faq } = useSiteContent();
+  const [openId, setOpenId] = useState(0);
+  const faqImage = mediaUrl(faq.image) || DEFAULT_IMAGE;
 
-  function toggle(id) {
-    setOpenId((prev) => (prev === id ? null : id));
+  function toggle(index) {
+    setOpenId((prev) => (prev === index ? null : index));
   }
 
   return (
     <>
       <style>{css}</style>
       <section className="faq-section">
-
-        {/* ── Left: content ── */}
         <div className="faq-left">
-          <span className="faq-eyebrow">FAQ</span>
+          <span className="faq-eyebrow">{faq.eyebrow}</span>
           <h2 className="faq-title">
-            Frequently Asked<br />Question
+            {faq.titleLine1}
+            <br />
+            {faq.titleLine2}
           </h2>
 
           <div className="faq-list">
-            {faqs.map((item) => {
-              const isOpen = openId === item.id;
+            {faq.items.map((item, index) => {
+              const isOpen = openId === index;
               return (
-                <div key={item.id} className="faq-item">
+                <div key={index} className="faq-item">
                   <div
                     className="faq-row"
-                    onClick={() => toggle(item.id)}
+                    onClick={() => toggle(index)}
                     role="button"
                     aria-expanded={isOpen}
                     tabIndex={0}
-                    onKeyDown={(e) => e.key === "Enter" && toggle(item.id)}
+                    onKeyDown={(e) => e.key === "Enter" && toggle(index)}
                   >
                     <span className="faq-question-text">{item.question}</span>
-                    <button
-                      className="faq-btn"
-                      tabIndex={-1}
-                      aria-hidden="true"
-                    >
-                      {isOpen
-                        ? <ChevronDown size={18} strokeWidth={2.5} />
-                        : <ChevronLeft size={18} strokeWidth={2.5} />
-                      }
+                    <button className="faq-btn" tabIndex={-1} aria-hidden="true">
+                      {isOpen ? (
+                        <ChevronDown size={18} strokeWidth={2.5} />
+                      ) : (
+                        <ChevronLeft size={18} strokeWidth={2.5} />
+                      )}
                     </button>
                   </div>
 
@@ -265,18 +230,11 @@ export default function FAQSection() {
           </div>
         </div>
 
-        {/* ── Right: image ── */}
-        {/* Replace the src URL with your own dental/medical image */}
         <div className="faq-right">
-          <img
-            src="https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&w=900&q=80"
-            alt="Dental care professional"
-          />
+          <img src={faqImage} alt="Dental care professional" />
         </div>
-
       </section>
 
-      {/* White gap after FAQ */}
       <div className="faq-gap"></div>
     </>
   );

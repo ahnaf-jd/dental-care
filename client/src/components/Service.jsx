@@ -1,6 +1,5 @@
 import "./service.css";
 import serviceImg from "../assets/service.png";
-
 import {
   FaTooth,
   FaUserMd,
@@ -9,49 +8,29 @@ import {
   FaNotesMedical,
   FaStethoscope,
 } from "react-icons/fa";
+import { useSiteContent } from "../context/SiteContentContext";
+import { mediaUrl } from "../services/contentApi";
+
+const SERVICE_ICONS = [
+  <FaTooth />,
+  <FaTeeth />,
+  <FaClinicMedical />,
+  <FaNotesMedical />,
+  <FaUserMd />,
+  <FaStethoscope />,
+];
 
 export default function Services() {
-  const leftServices = [
-    {
-      title: "Root Canal",
-      text: "Aenean eleifend turpis tellus, nec laoreet metus elementum ac.",
-      icon: <FaTooth />,
-    },
-    {
-      title: "Alignment Teeth",
-      text: "Aenean eleifend turpis tellus, nec laoreet metus elementum ac.",
-      icon: <FaTeeth />,
-    },
-    {
-      title: "Cosmetic Teeth",
-      text: "Aenean eleifend turpis tellus, nec laoreet metus elementum ac.",
-      icon: <FaClinicMedical />,
-    },
-  ];
-
-  const rightServices = [
-    {
-      title: "Oral Hygiene",
-      text: "Aenean eleifend turpis tellus, nec laoreet metus elementum ac.",
-      icon: <FaNotesMedical />,
-    },
-    {
-      title: "Live Advisory",
-      text: "Aenean eleifend turpis tellus, nec laoreet metus elementum ac.",
-      icon: <FaUserMd />,
-    },
-    {
-      title: "Cavity Inspection",
-      text: "Aenean eleifend turpis tellus, nec laoreet metus elementum ac.",
-      icon: <FaStethoscope />,
-    },
-  ];
+  const { services } = useSiteContent();
+  const centerImage = mediaUrl(services.centerImage) || serviceImg;
+  const leftServices = services.items.slice(0, 3);
+  const rightServices = services.items.slice(3, 6);
 
   return (
     <section className="services">
       <div className="services-header">
-        <span>OUR SERVICES</span>
-        <h2>What We Provide</h2>
+        <span>{services.tag}</span>
+        <h2>{services.title}</h2>
       </div>
 
       <div className="services-wrapper">
@@ -63,19 +42,19 @@ export default function Services() {
                 <p>{item.text}</p>
               </div>
 
-              <div className="service-icon">{item.icon}</div>
+              <div className="service-icon">{SERVICE_ICONS[index]}</div>
             </div>
           ))}
         </div>
 
         <div className="services-center">
-          <img src={serviceImg} alt="Dental Service" />
+          <img src={centerImage} alt="Dental Service" />
         </div>
 
         <div className="services-column">
           {rightServices.map((item, index) => (
             <div className="service-card" key={index}>
-              <div className="service-icon">{item.icon}</div>
+              <div className="service-icon">{SERVICE_ICONS[index + 3]}</div>
 
               <div className="service-content">
                 <h3>{item.title}</h3>

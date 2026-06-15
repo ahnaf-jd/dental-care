@@ -6,14 +6,14 @@ import AboutUs from "../components/AboutUs";
 import Box from "../components/Box";
 import TestimonialsSection from "../components/Testimonials";
 import FAQ from "../components/FAQSection";
-import DentalL from "../components/DentalHero";
 import BlogSection from "../components/BlogSection";
 import Contact from "../components/ContactSection";
 import Appointment from "../components/AppointmentBanner";
+import { SiteContentProvider } from "../context/SiteContentContext";
 
 function Home() {
   return (
-    <>
+    <SiteContentProvider>
       <Navbar />
       <div id="home">
         <Hero />
@@ -36,7 +36,7 @@ function Home() {
         <Contact />
       </div>
       <Footer />
-    </>
+    </SiteContentProvider>
   );
 }
 

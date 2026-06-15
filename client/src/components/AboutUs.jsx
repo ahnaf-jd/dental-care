@@ -1,18 +1,20 @@
 import aboutImg from "../assets/clinic.jpg";
-
 import "./about-us.css";
-
+import { useSiteContent } from "../context/SiteContentContext";
+import { mediaUrl } from "../services/contentApi";
 
 export default function About() {
+  const { about } = useSiteContent();
+  const image = mediaUrl(about.image) || aboutImg;
+
   return (
     <section className="about">
       <div className="about-container">
-
         <div className="about-image">
-          <img src={aboutImg} alt="Dental Care" />
+          <img src={image} alt="Dental Care" />
 
           <div className="experience-box">
-            <h2>50</h2>
+            <h2>{about.experienceYears}</h2>
             <p>
               Years of <br />
               Experience
@@ -21,19 +23,15 @@ export default function About() {
         </div>
 
         <div className="about-content">
-          <span className="about-tag">ABOUT US</span>
+          <span className="about-tag">{about.tag}</span>
 
           <h2>
-            We Care For Your <br />
-            Dental Health
+            {about.titleLine1} <br />
+            {about.titleLine2}
           </h2>
 
-          <p>
-            lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vel sapien eget nunc gravida sodales. Sed at felis a enim efficitur efficitur. In hac habitasse platea dictumst. Donec ac ligula id nunc efficitur convallis.
-          </p>
-
+          <p>{about.description}</p>
         </div>
-
       </div>
     </section>
   );

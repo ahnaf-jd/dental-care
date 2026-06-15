@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useSiteContent } from "../context/SiteContentContext";
+import { mediaUrl } from "../services/contentApi";
 
 const css = `
   *, *::before, *::after {
@@ -22,7 +24,6 @@ const css = `
     margin: 0 auto;
   }
 
-  /* ── Header ── */
   .ts-header {
     text-align: center;
     margin-bottom: 68px;
@@ -45,7 +46,6 @@ const css = `
     line-height: 1.2;
   }
 
-  /* ── Grid ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(10px); }
     to   { opacity: 1; transform: translateY(0);    }
@@ -58,7 +58,6 @@ const css = `
     animation: fadeUp 0.35s ease both;
   }
 
-  /* ── Card ── */
   .ts-card-outer {
     position: relative;
     margin-top: 48px;
@@ -79,7 +78,6 @@ const css = `
   .ts-card {
     background: #F6F9FE;
     border-radius: 10px;
-    /* 74px avatar – 48px offset = 26px inside card; 16px breathing room = 42px */
     padding: 42px 24px 28px;
     box-shadow: 0 4px 24px rgba(20, 35, 100, 0.07);
     border: 1px solid #E5EBF5;
@@ -94,7 +92,6 @@ const css = `
     margin-bottom: 16px;
   }
 
-  /* ── Stars ── */
   .ts-stars {
     display: flex;
     gap: 3px;
@@ -109,7 +106,6 @@ const css = `
     color: #FBBF24;
   }
 
-  /* ── Quote mark ── */
   .ts-quote {
     font-family: Georgia, 'Times New Roman', serif;
     font-size: 72px;
@@ -119,7 +115,6 @@ const css = `
     flex-shrink: 0;
   }
 
-  /* ── Body ── */
   .ts-text {
     font-size: 13.5px;
     color: #6B7280;
@@ -140,7 +135,6 @@ const css = `
     font-weight: 500;
   }
 
-  /* ── Dots ── */
   .ts-dots {
     display: flex;
     justify-content: center;
@@ -163,7 +157,6 @@ const css = `
     background: #1B2455;
   }
 
-  /* ── Responsive ── */
   @media (max-width: 680px) {
     .ts-grid {
       grid-template-columns: 1fr;
@@ -183,65 +176,13 @@ const css = `
   }
 `;
 
-/* ── Data ──────────────────────────────────────── */
-const slides = [
-  [
-    {
-      id: 1,
-      name: "Margie Dose",
-      role: "Web Developer",
-      image: "https://i.pravatar.cc/150?img=47",
-      rating: 5,
-      text: 'lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae libero non enim placerat eleifend aliquam erat volutpat. Curabitur diam ex, dapibus purus sapien, cursus sed nisl tristique, commodo gravida lectus non.',
-    },
-    {
-      id: 2,
-      name: "Jone Walker",
-      role: "Web Designer",
-      image: "https://i.pravatar.cc/150?img=68",
-      rating: 5,
-      text: 'lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae libero non enim placerat eleifend aliquam erat volutpat. Curabitur diam ex, dapibus purus sapien, cursus sed nisl tristique, commodo gravida lectus non.',
-    },
-  ],
-  [
-    {
-      id: 3,
-      name: "Sarah Johnson",
-      role: "UI/UX Designer",
-      image: "https://i.pravatar.cc/150?img=32",
-      rating: 4,
-      text: 'lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae libero non enim placerat eleifend aliquam erat volutpat. Curabitur diam ex, dapibus purus sapien, cursus sed nisl tristique, commodo gravida lectus non.',
-    },
-    {
-      id: 4,
-      name: "Mike Thompson",
-      role: "Product Manager",
-      image: "https://i.pravatar.cc/150?img=53",
-      rating: 5,
-      text: 'lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae libero non enim placerat eleifend aliquam erat volutpat. Curabitur diam ex, dapibus purus sapien, cursus sed nisl tristique, commodo gravida lectus non.',
-    },
-  ],
-  [
-    {
-      id: 5,
-      name: "Lisa Chen",
-      role: "Frontend Developer",
-      image: "https://i.pravatar.cc/150?img=20",
-      rating: 5,
-      text: 'lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae libero non enim placerat eleifend aliquam erat volutpat. Curabitur diam ex, dapibus purus sapien, cursus sed nisl tristique, commodo gravida lectus non.',
-    },
-    {
-      id: 6,
-      name: "David Brown",
-      role: "Backend Developer",
-      image: "https://i.pravatar.cc/150?img=60",
-      rating: 4,
-      text: 'lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec vitae libero non enim placerat eleifend aliquam erat volutpat. Curabitur diam ex, dapibus purus sapien, cursus sed nisl tristique, commodo gravida lectus non.',
-    },
-  ],
+const FALLBACK_AVATARS = [
+  "https://i.pravatar.cc/150?img=47",
+  "https://i.pravatar.cc/150?img=68",
+  "https://i.pravatar.cc/150?img=32",
+  "https://i.pravatar.cc/150?img=53",
 ];
 
-/* ── Sub-components ─────────────────────────────── */
 function Stars({ n }) {
   return (
     <div className="ts-stars">
@@ -254,10 +195,12 @@ function Stars({ n }) {
   );
 }
 
-function Card({ t }) {
+function Card({ t, index }) {
+  const image = mediaUrl(t.image) || FALLBACK_AVATARS[index % FALLBACK_AVATARS.length];
+
   return (
     <div className="ts-card-outer">
-      <img src={t.image} alt={t.name} className="ts-avatar" />
+      <img src={image} alt={t.name} className="ts-avatar" />
       <div className="ts-card">
         <div className="ts-card-top">
           <Stars n={t.rating} />
@@ -271,44 +214,51 @@ function Card({ t }) {
   );
 }
 
-/* ── Main export ────────────────────────────────── */
 export default function TestimonialsSection() {
+  const { testimonials } = useSiteContent();
   const [page, setPage] = useState(0);
   const [animKey, setAnimKey] = useState(0);
+
+  const slides = [];
+  for (let i = 0; i < testimonials.items.length; i += 2) {
+    slides.push(testimonials.items.slice(i, i + 2));
+  }
 
   function goTo(i) {
     setPage(i);
     setAnimKey((k) => k + 1);
   }
 
+  const currentSlide = slides[page] || [];
+
   return (
     <>
       <style>{css}</style>
       <section className="ts-section">
         <div className="ts-container">
-
           <header className="ts-header">
-            <span className="ts-label">Testimonial</span>
-            <h2 className="ts-title">What Our Clients Say</h2>
+            <span className="ts-label">{testimonials.eyebrow}</span>
+            <h2 className="ts-title">{testimonials.title}</h2>
           </header>
 
           <div key={animKey} className="ts-grid">
-            {slides[page].map((t) => (
-              <Card key={t.id} t={t} />
+            {currentSlide.map((t, index) => (
+              <Card key={`${page}-${index}`} t={t} index={page * 2 + index} />
             ))}
           </div>
 
-          <div className="ts-dots">
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                className={`ts-dot${i === page ? " ts-dot-active" : ""}`}
-                onClick={() => goTo(i)}
-                aria-label={`Go to page ${i + 1}`}
-              />
-            ))}
-          </div>
-
+          {slides.length > 1 && (
+            <div className="ts-dots">
+              {slides.map((_, i) => (
+                <button
+                  key={i}
+                  className={`ts-dot${i === page ? " ts-dot-active" : ""}`}
+                  onClick={() => goTo(i)}
+                  aria-label={`Go to page ${i + 1}`}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </section>
     </>
