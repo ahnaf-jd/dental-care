@@ -1,0 +1,180 @@
+
+.gallery {
+  padding: 100px 8%;
+  background: #f8faff;
+}
+
+.gallery-header {
+  text-align: center;
+  margin-bottom: 60px;
+  font-family: "Poppins", sans-serif;
+}
+
+.gallery-header span {
+  color: #356df3;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+}
+
+.gallery-header h2 {
+  margin: 15px 0;
+  font-size: clamp(1.5rem, 4.5vw, 3.5rem);
+  color: #111827;
+  font-weight: 800;
+}
+
+.gallery-header p {
+  max-width: 650px;
+  margin: auto;
+  color: #6b7280;
+  line-height: 1.8;
+}
+
+.gallery-card {
+  position: relative;
+  height: 350px;
+  overflow: hidden;
+  border-radius: 24px;
+  cursor: pointer;
+  background: white;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+}
+
+.gallery-card img,
+.gallery-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.gallery-card img {
+  transition: 0.4s ease;
+}
+
+.gallery-card:hover img {
+  transform: scale(1.08);
+}
+
+.play-overlay {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(0, 0, 0, 0.35);
+  color: white;
+}
+
+.swiper {
+  padding-bottom: 60px;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: #356df3;
+}
+
+.swiper-pagination-bullet-active {
+  background: #356df3;
+}
+
+/* ==========================
+   LIGHTBOX
+========================== */
+
+.gallery-modal {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0, 0, 0, 0.88);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 20px;
+
+  z-index: 9999;
+
+  backdrop-filter: blur(5px);
+}
+
+.gallery-modal-content {
+  position: relative;
+
+  width: min(90vw, 800px);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gallery-modal-content img,
+.gallery-modal-content video {
+  max-width: 100%;
+  max-height: 75vh;
+
+  width: auto;
+  height: auto;
+
+  border-radius: 20px;
+  object-fit: contain;
+
+  background: #000;
+}
+
+.gallery-close {
+  position: absolute;
+
+  top: 15px;
+  right: 15px;
+
+  width: 42px;
+  height: 42px;
+
+  border: none;
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+
+  cursor: pointer;
+
+  z-index: 10000;
+
+  transition: 0.3s;
+}
+
+.gallery-close:hover {
+  background: #356df3;
+  transform: rotate(90deg);
+}
+
+@media (max-width: 992px) {
+  .gallery {
+    padding: 80px 5%;
+  }
+}
+
+@media (max-width: 768px) {
+  .gallery-card {
+    height: 260px;
+  }
+
+  .gallery-modal-content {
+    width: 95vw;
+  }
+
+  .gallery-close {
+    top: 10px;
+    right: 10px;
+  }
+}

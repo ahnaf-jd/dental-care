@@ -31,7 +31,7 @@ const css = `
 
   .ts-label {
     display: block;
-    font-size: 11.5px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 2.5px;
     color: #2563EB;
@@ -40,7 +40,7 @@ const css = `
   }
 
   .ts-title {
-    font-size: 38px;
+    font-size: 53px;
     font-weight: 800;
     color: #1B2455;
     line-height: 1.2;

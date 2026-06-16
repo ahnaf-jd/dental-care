@@ -9,7 +9,10 @@ import FAQ from "../components/FAQSection";
 import BlogSection from "../components/BlogSection";
 import Contact from "../components/ContactSection";
 import Appointment from "../components/AppointmentBanner";
+import Gallery from "../components/Gallery";
+import ScrollToTopButton from "../styles/ScrollToTopButton";
 import { SiteContentProvider } from "../context/SiteContentContext";
+
 
 function Home() {
   return (
@@ -24,9 +27,7 @@ function Home() {
       <AboutUs />
       <Box />
       <TestimonialsSection />
-      <div id="appointment">
-        <Appointment />
-      </div>
+      <Gallery />
       <div style={{ height: "60px", background: "#ffffff" }}></div>
       <FAQ />
       <div id="blog">
