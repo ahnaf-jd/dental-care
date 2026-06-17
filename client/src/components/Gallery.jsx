@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import "./Gallery.css";
 
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -14,35 +15,51 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
+// Hardcoded fallback items shown when the API returns nothing
+const fallbackItems = [
+  {
+    _id: "fallback-1",
+    type: "image",
+    url: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=1200",
+  },
+  {
+    _id: "fallback-2",
+    type: "video",
+    url: "https://www.w3schools.com/html/mov_bbb.mp4",
+  },
+  {
+    _id: "fallback-3",
+    type: "image",
+    url: "https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=1200",
+  },
+  {
+    _id: "fallback-4",
+    type: "image",
+    url: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200",
+  },
+];
+
 export default function Gallery() {
   const [selectedItem, setSelectedItem] = useState(null);
+  const [galleryItems, setGalleryItems] = useState(fallbackItems);
 
-  const galleryItems = [
-    {
-      id: 1,
-      type: "image",
-      url: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=1200",
-    },
- 
-    {
-      id: 3,
-      type: "video",
-      url: "https://www.w3schools.com/html/mov_bbb.mp4",
-    },
-    {
-      id: 4,
-      type: "image",
-      url: "https://images.unsplash.com/photo-1606811971618-4486d14f3f99?w=1200",
-    },
-    {
-      id: 5,
-      type: "image",
-      url: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1200",
-    },
-  ];
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/api/gallery`)
+      .then((res) => {
+        if (res.data?.data?.length) {
+          setGalleryItems(res.data.data);
+        }
+      })
+      .catch(() => {
+        // Keep fallback items on error
+      });
+  }, []);
 
   return (
-    <section className="gallery">
+    <section id="gallary" className="gallery">
       <div className="gallery-header">
         <span>OUR GALLERY</span>
         <h2>Explore Our Dental Clinic</h2>
@@ -79,7 +96,7 @@ export default function Gallery() {
         }}
       >
         {galleryItems.map((item) => (
-          <SwiperSlide key={item.id}>
+          <SwiperSlide key={item._id}>
             <div
               className="gallery-card"
               onClick={() =>
@@ -89,7 +106,7 @@ export default function Gallery() {
               {item.type === "image" ? (
                 <img
                   src={item.url}
-                  alt="Gallery"
+                  alt={item.title || "Gallery"}
                 />
               ) : (
                 <>
@@ -137,13 +154,13 @@ export default function Gallery() {
                 alt=""
               />
             ) : (
-              <video
-                src={selectedItem.url}
-                controls
-                autoPlay
-                controlsList="nodownload noplaybackrate"
-                disablePictureInPicture
-                onContextMenu={(e) => e.preventDefault()}
+                <video
+                    src={selectedItem.url}
+                    controls
+                    autoPlay
+                    controlsList="nodownload noplaybackrate"
+                    disablePictureInPicture
+                    onContextMenu={(e) => e.preventDefault()}
                 />
             )}
           </div>

@@ -47,6 +47,17 @@ const fileFilter = (req, file, cb) => {
     );
   }
 
+  // Gallery accepts both images and videos
+  if (file.fieldname === 'galleryFile') {
+    if (IMAGE_TYPES.includes(file.mimetype) || VIDEO_TYPES.includes(file.mimetype)) {
+      return cb(null, true);
+    }
+    return cb(
+      new Error('Invalid file type. Allowed images: JPEG, PNG, WebP, GIF. Allowed videos: MP4, MPEG, MOV, AVI, WebM'),
+      false
+    );
+  }
+
   return cb(new Error(`Unexpected upload field: ${file.fieldname}`), false);
 };
 
@@ -137,6 +148,37 @@ const uploadContentFiles = (req, res, next) => {
   });
 };
 
+const uploadGalleryFile = (req, res, next) => {
+  upload.single('galleryFile')(req, res, (err) => {
+    if (!err) {
+      // Enforce size limits based on file type
+      if (req.file) {
+        const isVideo = VIDEO_TYPES.includes(req.file.mimetype);
+        const limit = isVideo ? LIMITS.video : LIMITS.coverImage;
+        const label = isVideo ? 'Video must be 100MB or smaller' : 'Image must be 10MB or smaller';
+        if (req.file.size > limit) {
+          return res.status(400).json({ success: false, message: label });
+        }
+      }
+      return next();
+    }
+
+    if (err instanceof multer.MulterError) {
+      const message =
+        err.code === 'LIMIT_FILE_SIZE'
+          ? 'File exceeds the maximum allowed size'
+          : err.code === 'LIMIT_UNEXPECTED_FILE'
+            ? `Unexpected file field: ${err.field}`
+            : err.message;
+
+      return res.status(400).json({ success: false, message });
+    }
+
+    return res.status(400).json({ success: false, message: err.message });
+  });
+};
+
 module.exports = upload;
 module.exports.uploadBlogFiles = uploadBlogFiles;
 module.exports.uploadContentFiles = uploadContentFiles;
+module.exports.uploadGalleryFile = uploadGalleryFile;

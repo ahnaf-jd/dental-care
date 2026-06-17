@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Save, ImageIcon } from "lucide-react";
+import { Save, ImageIcon, Film } from "lucide-react";
 import { fetchSiteContent, updateSiteContent, mediaUrl } from "../../services/contentApi";
 import siteContentDefaults from "../../config/siteContentDefaults";
 import "../../styles/admin-content.css";
@@ -14,6 +14,7 @@ const SECTIONS = [
   { id: "testimonials", label: "Testimonials" },
   { id: "contact", label: "Contact" },
   { id: "footer", label: "Footer" },
+  { id: "gallery", label: "Gallery" },
 ];
 
 function Field({ label, children }) {
@@ -402,6 +403,38 @@ export default function ContentAdmin() {
               <input value={content.footer.copyright} onChange={(e) => updateSection("footer", "copyright", e.target.value)} />
             </Field>
           </>
+        );
+
+      case "gallery":
+        return (
+          <div style={{ textAlign: "center", padding: "40px 20px" }}>
+            <Film size={48} style={{ color: "#3b5ee8", marginBottom: 16 }} />
+            <h3 style={{ margin: "0 0 8px", color: "#1e293b" }}>Media Gallery</h3>
+            <p style={{ color: "#6b7280", marginBottom: 20, fontSize: 14 }}>
+              Upload and manage photos &amp; videos from the dedicated gallery page.
+            </p>
+            <button
+              type="button"
+              onClick={() => navigate("/admin-gallery")}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 8,
+                padding: "12px 24px",
+                background: "linear-gradient(90deg, #16a7ff, #3b5ee8)",
+                color: "#fff",
+                border: "none",
+                borderRadius: 8,
+                fontSize: 14,
+                fontWeight: 700,
+                cursor: "pointer",
+                fontFamily: "inherit",
+              }}
+            >
+              <ImageIcon size={18} />
+              Open Gallery Manager
+            </button>
+          </div>
         );
 
       default:

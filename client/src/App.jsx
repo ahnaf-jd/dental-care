@@ -9,6 +9,7 @@ import Messages from "./pages/Messages";
 import ProtectedRoute from "./components/ProtectedRoute";
 import BlogAdmin from "./pages/admin/BlogAdmin";
 import ContentAdmin from "./pages/admin/ContentAdmin";
+import GalleryAdmin from "./pages/admin/GalleryAdmin";
 import ScrollToTopButton from "./styles/ScrollToTopButton";
 
 function App() {
@@ -43,6 +44,15 @@ function App() {
           element={
             <ProtectedRoute>
               <ContentAdmin />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin-gallery"
+          element={
+            <ProtectedRoute>
+              <GalleryAdmin />
             </ProtectedRoute>
           }
         />
