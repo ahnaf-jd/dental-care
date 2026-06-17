@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { FaBars, FaTimes, FaTooth } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./Navbar.css";
+import "./navbar.css";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -58,29 +58,29 @@ function Navbar() {
       {/* Desktop Navigation */}
       <ul className="nav-links">
         <li>
-          <button type="button" className="nav-link" onClick={() => goToSection("home")}>
+          <a href="#home" className="nav-link" onClick={() => goToSection("home")}>
             Home
-          </button>
+          </a>
         </li>
         <li>
-          <button type="button" className="nav-link" onClick={() => goToSection("services")}>
+          <a href="#services" className="nav-link" onClick={() => goToSection("services")}>
             Services
-          </button>
+          </a>
         </li>
         <li>
-          <button type="button" className="nav-link" onClick={() => goToSection("gallary")}>
-            Gallary
-          </button>
+          <a href="#gallery" className="nav-link" onClick={() => goToSection("gallary")}>
+            Gallery
+          </a>
         </li>
         <li>
-          <button type="button" className="nav-link" onClick={() => goToSection("blog")}>
-            Blog
-          </button>
+          <a href="/blogs" className="nav-link" onClick={() => goToSection("blogs")}>
+            Blogs
+          </a>
         </li>
         <li>
-          <button type="button" className="nav-link" onClick={() => goToSection("contact")}>
-            Contact
-          </button>
+          <a href="#contact" className="nav-link" onClick={() => goToSection("contact")}>
+            Contact Us
+          </a>
         </li>
       </ul>
 
@@ -97,24 +97,29 @@ function Navbar() {
       {/* Mobile Menu */}
       <div className={`mobile-menu ${menuOpen ? "active" : ""}`}>
         <li>
-          <button type="button" className="nav-link" onClick={() => goToSection("home")}>
+          <a href="#home" className="nav-link" onClick={() => goToSection("home")}>
             Home
-          </button>
+          </a>
         </li>
         <li>
-          <button type="button" className="nav-link" onClick={() => goToSection("services")}>
+          <a href="#services" className="nav-link" onClick={() => goToSection("services")}>
             Services
-          </button>
+          </a>
         </li>
         <li>
-          <button type="button" className="nav-link" onClick={() => goToSection("blog")}>
-            Blog
-          </button>
+          <a href="#gallery" className="nav-link" onClick={() => goToSection("Gallery")}>
+            Gallery
+          </a>
         </li>
         <li>
-          <button type="button" className="nav-link" onClick={() => goToSection("contact")}>
-            Contact
-          </button>
+          <a href="/blogs" className="nav-link" onClick={() => goToSection("blogs")}>
+            Blogs
+          </a>
+        </li>
+        <li>
+          <a href="#contact" className="nav-link" onClick={() => goToSection("contact")}>
+            Contact Us
+          </a>
         </li>
 
         <button className="mobile-btn" onClick={handleBookAppointment}>
