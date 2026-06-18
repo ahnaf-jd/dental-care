@@ -18,11 +18,10 @@ const allowedOrigins = process.env.FRONTEND_URL || 'http://localhost:5173';
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://dental-care-five-xi.vercel.app/"
+    "https://dental-care-five-xi.vercel.app"
   ],
   credentials: true
 }));
-
 app.use(express.json());
 
 app.use("/api/blogs", blogRoutes);
