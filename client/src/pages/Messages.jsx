@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Download, Trash2, Loader } from "lucide-react";
 import "./messages.css";
-
-const API_URL = "https://dental-care-wmni.onrender.com";
+import { API_URL } from "../services/blogApi";
 
 export default function Messages() {
   const [messages, setMessages] = useState([]);
@@ -14,11 +13,13 @@ export default function Messages() {
     fetchMessages();
   }, []);
 
+  const FORMS_API = `${API_URL}/api/forms`;
+
   const fetchMessages = async () => {
     try {
       setLoading(true);
       setError("");
-      const response = await fetch(API_URL + "/all");
+      const response = await fetch(`${FORMS_API}/all`);
       const data = await response.json();
 
       if (data.success) {
@@ -41,7 +42,7 @@ export default function Messages() {
 
     try {
       setDeleting(id);
-      const response = await fetch(API_URL + `/${id}`, {
+      const response = await fetch(`${FORMS_API}/${id}`, {
         method: "DELETE",
       });
 
@@ -62,7 +63,7 @@ export default function Messages() {
 
   const handleExportExcel = async () => {
     try {
-      const response = await fetch(API_URL + "/export/excel");
+      const response = await fetch(`${FORMS_API}/export/excel`);
       if (!response.ok) {
         throw new Error("Failed to export");
       }
