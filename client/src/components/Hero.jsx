@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Hero.css";
+import "./hero.css";
 import doctorImg2 from "../assets/doctor2.jpeg";
 import { useSiteContent } from "../context/SiteContentContext";
 import { mediaUrl } from "../services/contentApi";
