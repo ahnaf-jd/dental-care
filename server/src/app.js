@@ -14,12 +14,9 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 
 // CORS configuration - restrict to frontend URL
-const allowedOrigins = process.env.FRONTEND_URL || 'http://localhost:5173';
+const allowedOrigins = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.split(',').map(o => o.trim()) : ['http://localhost:5173'];
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://dental-care-five-xi.vercel.app"
-  ],
+  origin: allowedOrigins,
   credentials: true
 }));
 app.use(express.json());
