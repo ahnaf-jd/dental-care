@@ -16,25 +16,16 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 // CORS configuration - restrict to frontend URL
 const allowedOrigins = process.env.FRONTEND_URL || 'http://localhost:5173';
 app.use(cors({
-  origin: (origin, callback) => {
-    const allowed = [
-      process.env.FRONTEND_URL,
-      'http://localhost:5173',
-      'http://localhost:3000',
-    ].filter(Boolean);
-
-    if (!origin) return callback(null, true);
-
-    // Allow exact-match origins or configured FRONTEND_URL
-    if (allowed.includes(origin)) return callback(null, true);
-
-    // Allow localhost/dev with any port
-    if (/^http:\/\/localhost:\d+$/.test(origin)) return callback(null, true);
-
-    return callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
+  origin: [
+    "http://localhost:5173",
+    "https://your-frontend-domain.vercel.app"
+  ],
+  credentials: true
 }));
+
+app.use(express.json());
+
+app.use("/api/blogs", blogRoutes);
 
 app.use(express.json());
 

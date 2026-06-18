@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Download, Trash2, Loader } from "lucide-react";
 import "./messages.css";
 
-const API_URL = "http://localhost:5000/api/forms";
+const API_URL = "https://dental-care-wmni.onrender.com";
 
 export default function Messages() {
   const [messages, setMessages] = useState([]);
